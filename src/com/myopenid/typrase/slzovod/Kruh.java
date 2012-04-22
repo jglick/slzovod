@@ -10,10 +10,6 @@ class Kruh {
         this.y = y;
         this.r = r;
     }
-    boolean overlaps(Kruh o) {
-        // XXX convert to toroidal
-        return Math.sqrt(Math.pow(x - o.x, 2) + Math.pow(y - o.y, 2)) < r + o.r;
-    }
     float mass() {
         return (1 + vlhkost) * (float) Math.pow(r, 2);
     }
