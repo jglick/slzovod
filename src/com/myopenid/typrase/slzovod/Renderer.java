@@ -9,7 +9,7 @@ class Renderer {
     private static final int R_VLHKÝ = 96;
     private static final int G_VLHKÝ = 0;
     private static final int B_VLHKÝ = 0;
-    private static final float[] WRAPS = {-1, 0, -1};
+    private static final float[] WRAPS = {-1, 0, 1};
     final float w, h;
     private final Paint p;
     float tx, ty;
@@ -47,7 +47,6 @@ class Renderer {
             float cx = ax + w * wx;
             for (float wy : WRAPS) {
                 float cy = ay + h * wy;
-                // XXX if cx > w || cy > h, nothing is drawn, even though cx - rx < w && cy - ry < h; maybe use drawArc?
                 canvas.drawOval(new RectF(cx - rx, cy - ry, cx + rx, cy + ry), p);
             }
         }
