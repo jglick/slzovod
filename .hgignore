@@ -4,3 +4,7 @@
 \.rej$
 \.conflict\~$
 ^private$
+^bin$
+^gen$
+^local\.properties$
+^nbandroid$
