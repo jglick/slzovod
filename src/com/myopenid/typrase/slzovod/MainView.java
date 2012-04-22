@@ -6,6 +6,9 @@ import android.view.View;
 import java.util.Timer;
 import java.util.TimerTask;
 class MainView extends View {
+    private static final int FPS = 30;
+    private static final int KRUH_COUNT = 15;
+    private static final float SCROLL_SPEED = 3;
     private final MainActivity activity;
     private Renderer rend;
     private TimerTask task;
@@ -34,11 +37,11 @@ class MainView extends View {
                 postInvalidate();
             }
         };
-        new Timer("Slzovod").scheduleAtFixedRate(task, 0, 100);
+        new Timer("Slzovod").scheduleAtFixedRate(task, 0, 1000 / FPS);
     }
     private Universe init(float width, float height) {
         Universe u = new Universe(width, height);
-        u.populate(15);
+        u.populate(KRUH_COUNT);
         return u;
     }
     @Override protected void onDraw(Canvas canvas) {
@@ -62,8 +65,8 @@ class MainView extends View {
     }
     @Override public boolean onTrackballEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            rend.tx += event.getX() * 3;
-            rend.ty += event.getY() * 3;
+            rend.tx += event.getX() * SCROLL_SPEED;
+            rend.ty += event.getY() * SCROLL_SPEED;
             invalidate();
         }
         return true;
