@@ -3,7 +3,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.RadialGradient;
 import android.graphics.RectF;
+import android.graphics.Shader;
 class Renderer {
     private static final int R_SUCHÝ = 204;
     private static final int G_SUCHÝ = 140;
@@ -51,8 +53,9 @@ class Renderer {
         }
     }
     void renderWarp(Canvas canvas, PointF warp) {
-        p.setARGB(150, 255, 255, 255);
-        circle(canvas, warp.x, warp.y, 30);
+        p.setShader(new RadialGradient(warp.x, warp.y, 15, new int[] {Color.argb(255, 255, 255, 255), Color.argb(100, 255, 255, 255)}, null, Shader.TileMode.CLAMP));
+        circle(canvas, warp.x, warp.y, 15);
+        p.setShader(null);
     }
     private PointF[] wraps(float x, float y) {
         float ax = (float) Math.IEEEremainder(x + tx, space.w);
