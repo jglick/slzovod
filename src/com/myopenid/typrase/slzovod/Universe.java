@@ -14,6 +14,7 @@ class Universe {
     private static final float VLHČENÍ = .9f;
     private static final float MRKNUTÍ_DELAY = 5;
     private static final float WARP_MASS = 500;
+    private static final float WARP_DISPLACEMENT = 20;
     final Torus space;
     final Oko oko;
     final Collection<Kruh> kruhy = new LinkedList<Kruh>();
@@ -71,10 +72,10 @@ class Universe {
             s.x = oldx + s.vx * dt;
             s.y = oldy + s.vy * dt;
             if (warp != null) {
-                s.accelerate(space.acceleration(warp.x, warp.y, WARP_MASS, oldx, oldy), dt);
+                s.accelerate(space.acceleration(warp.x, warp.y, WARP_MASS, oldx, oldy, WARP_DISPLACEMENT), dt);
             }
             for (Kruh k : kruhy) {
-                s.accelerate(space.acceleration(k.x, k.y, k.mass(), oldx, oldy), dt);
+                s.accelerate(space.acceleration(k.x, k.y, k.mass(), oldx, oldy, 0), dt);
                 if (space.crosses(k.x, k.y, k.r, oldx, oldy, s.x, s.y)) {
                     k.vlhkost = 1 - (VLHČENÍ * (1 - k.vlhkost));
                     slzy.remove(s);

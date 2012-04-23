@@ -15,10 +15,10 @@ class Torus {
         // XXX take into consideration x1/y1
         return dist(cx, cy, x2, y2) < r;
     }
-    PointF acceleration(float cx, float cy, float mass, float x, float y) {
+    PointF acceleration(float cx, float cy, float mass, float x, float y, float displacement) {
         float dx = (float) IEEEremainder(cx - x, w);
         float dy = (float) IEEEremainder(cy - y, h);
-        float scale = mass * (float) pow(pow(dx, 2) + pow(dy, 2), -1.5);
+        float scale = mass * (float) pow(pow(dx, 2) + pow(dy, 2) + displacement, -1.5);
         tmp.x = dx * scale;
         tmp.y = dy * scale;
         return tmp;
