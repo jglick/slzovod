@@ -27,6 +27,7 @@ class MainView extends View {
         setFocusable(true);
     }
     @Override protected void onWindowVisibilityChanged(int visibility) {
+        // XXX this should rather be done in MainActivity.onPause/onResume
         if (activity.universe != null) {
             if (visibility == View.VISIBLE) {
                 activity.universe.resume();
