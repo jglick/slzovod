@@ -1,9 +1,9 @@
 package com.myopenid.typrase.slzovod;
 import android.graphics.PointF;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 class Universe {
     private static final float GAP = 10;
     private static final float MIN_KRUH_SIZE_FRACTION = 20;
@@ -13,10 +13,12 @@ class Universe {
     private static final float SLZA_VELOCITY = 7;
     private static final float VLHČENÍ = .9f;
     private static final float MRKNUTÍ_DELAY = 5;
+    private static final float WARP_MASS = 500;
     final Torus space;
     final Oko oko;
     final Collection<Kruh> kruhy = new LinkedList<Kruh>();
-    final Collection<Slza> slzy = new LinkedList<Slza>();
+    final Collection<Slza> slzy = new CopyOnWriteArrayList<Slza>();
+    PointF warp;
     private final long start = System.currentTimeMillis();
     private float t;
     private float mrknutí;
@@ -63,19 +65,19 @@ class Universe {
             mrknutí = t;
             mrkni();
         }
-        for (Iterator<Slza> it = slzy.iterator(); it.hasNext();) {
-            Slza s = it.next();
+        for (Slza s : slzy) {
             float oldx = s.x;
             float oldy = s.y;
             s.x = oldx + s.vx * dt;
             s.y = oldy + s.vy * dt;
+            if (warp != null) {
+                s.accelerate(space.acceleration(warp.x, warp.y, WARP_MASS, oldx, oldy), dt);
+            }
             for (Kruh k : kruhy) {
-                PointF accel = space.acceleration(k.x, k.y, k.mass(), oldx, oldy);
-                s.vx += accel.x * dt;
-                s.vy += accel.y * dt;
+                s.accelerate(space.acceleration(k.x, k.y, k.mass(), oldx, oldy), dt);
                 if (space.crosses(k.x, k.y, k.r, oldx, oldy, s.x, s.y)) {
                     k.vlhkost = 1 - (VLHČENÍ * (1 - k.vlhkost));
-                    it.remove();
+                    slzy.remove(s);
                     break;
                 }
             }

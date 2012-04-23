@@ -1,5 +1,6 @@
 package com.myopenid.typrase.slzovod;
 import android.graphics.Canvas;
+import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,20 +55,24 @@ class MainView extends View {
         for (Slza s : u.slzy) {
             rend.render(canvas, s);
         }
+        if (u.warp != null) {
+            rend.renderWarp(canvas, u.warp);
+        }
     }
     @Override public boolean onTouchEvent(MotionEvent me) {
-        if (me.getAction() != MotionEvent.ACTION_DOWN) {
-            return false;
+        if (me.getAction() == MotionEvent.ACTION_DOWN || me.getAction() == MotionEvent.ACTION_MOVE) {
+            activity.universe.warp = new PointF(me.getX() - rend.tx, me.getY() - rend.ty);
+            return true;
+        } else if (me.getAction() == MotionEvent.ACTION_UP) {
+            activity.universe.warp = null;
+            return true;
         }
-        // XXX warp
-        invalidate();
-        return true;
+        return false;
     }
     @Override public boolean onTrackballEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
             rend.tx += event.getX() * SCROLL_SPEED;
             rend.ty += event.getY() * SCROLL_SPEED;
-            invalidate();
         }
         return true;
     }

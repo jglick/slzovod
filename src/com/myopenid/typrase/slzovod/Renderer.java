@@ -44,6 +44,10 @@ class Renderer {
             circle(canvas, slza.x - slza.vx * i / 2, slza.y - slza.vy * i / 2, 5 - i);
         }
     }
+    void renderWarp(Canvas canvas, PointF warp) {
+        p.setARGB(150, 255, 255, 255);
+        circle(canvas, warp.x, warp.y, 30);
+    }
     private PointF[] wraps(float x, float y) {
         float ax = (float) Math.IEEEremainder(x + tx, space.w);
         if (ax < 0) {
