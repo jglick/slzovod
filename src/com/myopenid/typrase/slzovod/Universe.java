@@ -20,7 +20,8 @@ class Universe {
     final Collection<Kruh> kruhy = new LinkedList<Kruh>();
     final Collection<Slza> slzy = new CopyOnWriteArrayList<Slza>();
     PointF warp;
-    private final long start = System.currentTimeMillis();
+    private long start = System.currentTimeMillis();
+    private long paused;
     private float t;
     private float mrknutí;
     private final Random rand = new Random();
@@ -58,10 +59,17 @@ class Universe {
         s.vy = SLZA_VELOCITY * y;
         slzy.add(s);
     }
+    void pause() {
+        paused = System.currentTimeMillis();
+    }
+    void resume() {
+        start += System.currentTimeMillis() - paused;
+    }
     void step() {
         float _t = (System.currentTimeMillis() - start) / 1000f;
         float dt = _t - t;
         t = _t;
+        //Log.v("Slzovod", "@" + t);
         if (t > mrknutí + MRKNUTÍ_DELAY) {
             mrknutí = t;
             mrkni();

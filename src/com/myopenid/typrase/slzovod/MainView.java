@@ -12,6 +12,7 @@ class MainView extends View {
     private static final float SCROLL_SPEED = 3;
     private final MainActivity activity;
     private Renderer rend;
+    private final Timer timer = new Timer("Slzovod");
     private TimerTask task;
     MainView(MainActivity activity) {
         super(activity);
@@ -22,9 +23,24 @@ class MainView extends View {
         setFocusable(true);
     }
     @Override protected void onWindowVisibilityChanged(int visibility) {
-        if (visibility != View.VISIBLE) {
-            task.cancel(); // XXX restart later
+        if (activity.universe != null) {
+            if (visibility == View.VISIBLE) {
+                activity.universe.resume();
+                scheduleTask();
+            } else {
+                activity.universe.pause();
+                task.cancel();
+            }
         }
+    }
+    private void scheduleTask() {
+        task = new TimerTask() {
+            @Override public void run() {
+                activity.universe.step();
+                postInvalidate();
+            }
+        };
+        timer.schedule(task, 0, 1000 / FPS);
     }
     @Override protected void onSizeChanged(int width, int height, int oldw, int oldh) {
         super.onSizeChanged(width, height, oldw, oldh);
@@ -32,13 +48,7 @@ class MainView extends View {
         final Universe u = init(width, height);
         activity.universe = u;
         rend = new Renderer(u.space);
-        task = new TimerTask() {
-            @Override public void run() {
-                u.step();
-                postInvalidate();
-            }
-        };
-        new Timer("Slzovod").scheduleAtFixedRate(task, 0, 1000 / FPS);
+        scheduleTask();
     }
     private Universe init(float width, float height) {
         Universe u = new Universe(width, height);
