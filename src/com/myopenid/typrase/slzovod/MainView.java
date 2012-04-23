@@ -1,5 +1,6 @@
 package com.myopenid.typrase.slzovod;
 import android.graphics.Canvas;
+import android.graphics.Picture;
 import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -14,6 +15,9 @@ class MainView extends View {
     private Renderer rend;
     private final Timer timer = new Timer("Slzovod");
     private TimerTask task;
+    private static final boolean USE_STATIS = false;
+    private Picture stasis;
+    private float stasisKey;
     MainView(MainActivity activity) {
         super(activity);
         this.activity = activity;
@@ -48,6 +52,7 @@ class MainView extends View {
         final Universe u = init(width, height);
         activity.universe = u;
         rend = new Renderer(u.space);
+        stasis = null;
         scheduleTask();
     }
     private Universe init(float width, float height) {
@@ -58,9 +63,17 @@ class MainView extends View {
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Universe u = activity.universe;
-        rend.render(canvas, u.oko);
-        for (Kruh k : u.kruhy) {
-            rend.render(canvas, k);
+        if (USE_STATIS) {
+            float key = stasisKey(u);
+            if (stasis == null || key != stasisKey) {
+                Log.v("Slzovod", "redrawing stasis");
+                stasis = new Picture();
+                renderStasis(u, stasis.beginRecording(canvas.getWidth(), canvas.getHeight()));
+                stasisKey = key;
+            }
+            stasis.draw(canvas);
+        } else {
+            renderStasis(u, canvas);
         }
         for (Slza s : u.slzy) {
             rend.render(canvas, s, u.oko);
@@ -68,6 +81,20 @@ class MainView extends View {
         if (u.warp != null) {
             rend.renderWarp(canvas, u.warp);
         }
+    }
+    private void renderStasis(Universe u, Canvas canvas) {
+        rend.render(canvas, u.oko);
+        for (Kruh k : u.kruhy) {
+            rend.render(canvas, k);
+        }
+    }
+    private float stasisKey(Universe u) {
+        float key = 0;
+        for (Kruh k : u.kruhy) {
+            key = key * 1.0023456789f + k.vlhkost;
+        }
+        //Log.v("Slzovod", "statisKey=" + key);
+        return key;
     }
     @Override public boolean onTouchEvent(MotionEvent me) {
         if (me.getAction() == MotionEvent.ACTION_DOWN || me.getAction() == MotionEvent.ACTION_MOVE) {
@@ -83,6 +110,7 @@ class MainView extends View {
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
             rend.tx += event.getX() * SCROLL_SPEED;
             rend.ty += event.getY() * SCROLL_SPEED;
+            stasis = null;
         }
         return true;
     }
