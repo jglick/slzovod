@@ -53,7 +53,7 @@ class MainView extends View {
             rend.render(canvas, k);
         }
         for (Slza s : u.slzy) {
-            rend.render(canvas, s);
+            rend.render(canvas, s, u.oko);
         }
         if (u.warp != null) {
             rend.renderWarp(canvas, u.warp);

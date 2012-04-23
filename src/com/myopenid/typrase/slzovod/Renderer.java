@@ -1,5 +1,6 @@
 package com.myopenid.typrase.slzovod;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -11,6 +12,7 @@ class Renderer {
     private static final int G_VLHKÝ = 0;
     private static final int B_VLHKÝ = 0;
     private static final PointF[] wraps_tmp = new PointF[9];
+    private static final double DOPPLER = .1;
     static {
         for (int i = 0; i < 9; i++) {
             wraps_tmp[i] = new PointF();
@@ -38,9 +40,13 @@ class Renderer {
                        B_SUCHÝ + (int) ((B_VLHKÝ - B_SUCHÝ) * kruh.vlhkost));
         circle(canvas, kruh.x, kruh.y, kruh.r);
     }
-    void render(Canvas canvas, Slza slza) {
+    void render(Canvas canvas, Slza slza, Oko oko) {
+        float startDist = space.dist(oko.x, oko.y, slza.x, slza.y);
+        float endDist = space.dist(oko.x, oko.y, slza.x + slza.vx, slza.y + slza.vy);
+        double doppler = Math.tanh((endDist - startDist) * DOPPLER);
+        //Log.v("Slzovod", "doppler=" + doppler + " for Δdist=" + (endDist - startDist));
         for (int i = 0; i < 5; i++) {
-            p.setARGB(180 - i * 20, 200, 200, 255);
+            p.setColor(Color.HSVToColor(180 - i * 20, new float[] {150 - (int) (60 * doppler), .7f, 1}));
             circle(canvas, slza.x - slza.vx * i / 2, slza.y - slza.vy * i / 2, 5 - i);
         }
     }
