@@ -13,7 +13,7 @@ class Universe {
     private static final float SLZA_VELOCITY = 7;
     private static final float VLHČENÍ = .9f;
     private static final float MRKNUTÍ_DELAY = 5;
-    private static final float WARP_MASS = 500;
+    private static final float WARP_MASS = 3000;
     private static final float WARP_DISPLACEMENT = 20;
     final Torus space;
     final Oko oko;

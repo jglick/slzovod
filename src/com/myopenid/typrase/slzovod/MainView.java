@@ -10,7 +10,7 @@ import java.util.TimerTask;
 class MainView extends View {
     private static final int FPS = 30;
     private static final int KRUH_COUNT = 15;
-    private static final float SCROLL_SPEED = 3;
+    private static final float SCROLL_SPEED = 7;
     private final MainActivity activity;
     private Renderer rend;
     private final Timer timer = new Timer("Slzovod");
@@ -99,7 +99,7 @@ class MainView extends View {
     }
     @Override public boolean onTouchEvent(MotionEvent me) {
         if (me.getAction() == MotionEvent.ACTION_DOWN || me.getAction() == MotionEvent.ACTION_MOVE) {
-            activity.universe.warp = new PointF(me.getX() - rend.tx, me.getY() - rend.ty);
+            activity.universe.warp = new PointF(me.getX() - rend.tx, me.getY() - rend.ty - 100);
             return true;
         } else if (me.getAction() == MotionEvent.ACTION_UP) {
             activity.universe.warp = null;
