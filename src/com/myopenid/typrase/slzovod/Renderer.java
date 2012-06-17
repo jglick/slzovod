@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RadialGradient;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 class Renderer {
@@ -41,6 +42,13 @@ class Renderer {
                        G_SUCHÝ + (int) ((G_VLHKÝ - G_SUCHÝ) * kruh.vlhkost),
                        B_SUCHÝ + (int) ((B_VLHKÝ - B_SUCHÝ) * kruh.vlhkost));
         circle(canvas, kruh.x, kruh.y, kruh.r);
+        if (kruh.label != null) {
+            p.setARGB(255, 0, 0, 0);
+            // XXX no apparent effect on text: p.setMaskFilter(new EmbossMaskFilter(new float[] {5, -1, 3}, .7f, 8f, 3f));
+            Rect bounds = new Rect();
+            p.getTextBounds(kruh.label, 0, kruh.label.length(), bounds);
+            text(canvas, kruh.x - bounds.right / 2, kruh.y - bounds.top / 2, kruh.label);
+        }
     }
     void render(Canvas canvas, Slza slza, Oko oko) {
         float startDist = space.dist(oko.x, oko.y, slza.x, slza.y);
@@ -85,6 +93,11 @@ class Renderer {
     private void oval(Canvas canvas, float x, float y, float rx, float ry) {
         for (PointF point : wraps(x, y)) {
             canvas.drawOval(new RectF(point.x - rx, point.y - ry, point.x + rx, point.y + ry), p);
+        }
+    }
+    private void text(Canvas canvas, float x, float y, String text) {
+        for (PointF point : wraps(x, y)) {
+            canvas.drawText(text, point.x, point.y, p);
         }
     }
 }

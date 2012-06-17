@@ -8,6 +8,7 @@ class Universe {
     private static final float GAP = 10;
     private static final float MIN_KRUH_SIZE_FRACTION = 20;
     private static final float MAX_KRUH_SIZE_FRACTION = 10;
+    private static final String[] KRUH_LABELS = {"J", "A", "M", "H", "♥"};
     private static final float OKO_WIDTH = 20;
     private static final float OKO_HEIGHT = 10;
     private static final float SLZA_VELOCITY = 7;
@@ -34,7 +35,7 @@ class Universe {
         float maxsize = Math.min(space.w, space.h) / MAX_KRUH_SIZE_FRACTION;
         for (int i = 0; i < count; i++) {
             KRUH: while (true) {
-                Kruh k = new Kruh(rand.nextFloat() * space.w, rand.nextFloat() * space.h, minsize + rand.nextFloat() * (maxsize - minsize));
+                Kruh k = new Kruh(rand.nextFloat() * space.w, rand.nextFloat() * space.h, minsize + rand.nextFloat() * (maxsize - minsize), i < KRUH_LABELS.length ? KRUH_LABELS[i] : null);
                 if (space.dist(k.x, k.y, oko.x, oko.y) < k.r + oko.rx + GAP) {
                     continue KRUH;
                 }
